@@ -14,3 +14,4 @@ mobile/android/
 backend/data/
 infra/runtime/
 *.app.zip
+demo-artifacts/
