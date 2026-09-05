@@ -41,7 +41,7 @@ No account or private credentials are required.
 
 ### Demo post
 
-`PASTE_X_POST_LINK`
+Upload `demo-artifacts/BurningMaps-Demo.mp4` (39.5 seconds, H.264) to X, tag `@nerdconf`, then paste the resulting post URL here.
 
 ### Repository
 
