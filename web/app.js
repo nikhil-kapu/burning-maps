@@ -1,304 +1,147 @@
-const COLORS = {
-  ink: "#171914",
-  orange: "#e85d2a",
-  amber: "#d99a2b",
-  red: "#c83e32",
-  green: "#277455",
-};
-
 const points = {
-  hub: [28.1087, 85.2967],
-  camp: [28.1845, 85.361],
-  bridge: [28.1415, 85.327],
-  slope: [28.163, 85.344],
-  closure: [28.149, 85.313],
+  hub: [28.1054, 85.3006],
+  junction: [28.1368, 85.3133],
+  ridge: [28.169, 85.326],
+  camp: [28.1985, 85.3443],
+  bridge: [28.148, 85.338],
+  closure: [28.158, 85.331],
 };
 
-const routes = {
-  river: [
-    points.hub,
-    [28.121, 85.306],
-    [28.132, 85.317],
-    points.bridge,
-    [28.157, 85.341],
-    points.camp,
-  ],
-  ridge: [
-    points.hub,
-    [28.119, 85.286],
-    [28.136, 85.296],
-    [28.153, 85.309],
-    [28.172, 85.333],
-    points.camp,
-  ],
-  fallback: [
-    points.hub,
-    [28.116, 85.279],
-    [28.142, 85.27],
-    [28.17, 85.292],
-    [28.191, 85.326],
-    points.camp,
-  ],
-};
+const directRoute = [points.hub, [28.124, 85.315], points.bridge, [28.175, 85.341], points.camp];
+const safeRoute = [points.hub, points.junction, [28.151, 85.302], points.ridge, [28.185, 85.331], points.camp];
+const updatedRoute = [points.hub, [28.123, 85.295], [28.154, 85.289], [28.178, 85.311], points.camp];
+const maps = {};
+let activeStep = 0;
+let toastTimer;
 
-const map = L.map("map", {
-  zoomControl: false,
-  attributionControl: true,
-}).setView([28.145, 85.323], 12);
-
-L.control.zoom({ position: "bottomleft" }).addTo(map);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-}).addTo(map);
-
-function markerIcon(label, symbol, color) {
+function marker(label, color, glyph = "•") {
   return L.divIcon({
     className: "",
-    html: `<div class="map-marker" style="--marker-color:${color}"><i>${symbol}</i><span>${label}</span></div>`,
-    iconSize: [0, 0],
+    html: `<div class="map-marker" style="--marker:${color}"><i>${glyph}</i><span>${label}</span></div>`,
+    iconSize: [1, 1],
     iconAnchor: [0, 0],
   });
 }
 
-L.marker(points.hub, { icon: markerIcon("Dhunche hub", "□", COLORS.ink) }).addTo(map);
-L.marker(points.camp, { icon: markerIcon("Relief camp A", "+", COLORS.green) }).addTo(map);
-L.marker(points.bridge, { icon: markerIcon("Bridge out", "×", COLORS.red) }).addTo(map);
-L.marker(points.slope, { icon: markerIcon("Slope watch", "!", COLORS.amber) }).addTo(map);
-
-let stage = "brief";
-let routeLayers = [];
-let closureMarker;
-let actionTimer;
-
-const primaryAction = document.querySelector("#primary-action");
-const actionLabel = primaryAction.querySelector("span");
-const actionIcon = primaryAction.querySelector("i");
-const actionNote = document.querySelector("#action-note");
-const decisionPanel = document.querySelector("#decision-panel");
-const evidencePanel = document.querySelector("#evidence-panel");
-const workflow = document.querySelector("#workflow");
-const stageNumber = document.querySelector("#stage-number");
-const stageLabel = document.querySelector("#stage-label");
-const mapAlert = document.querySelector("#map-alert");
-const toast = document.querySelector("#toast");
-
-function addRoute(coordinates, options) {
-  const layer = L.polyline(coordinates, {
-    color: options.color,
-    weight: options.weight ?? 5,
-    opacity: options.opacity ?? 1,
-    dashArray: options.dashArray,
-    lineCap: "round",
-    lineJoin: "round",
+function addTiles(map) {
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap",
   }).addTo(map);
-  routeLayers.push(layer);
-  return layer;
 }
 
-function clearRoutes() {
-  routeLayers.forEach((layer) => map.removeLayer(layer));
-  routeLayers = [];
-}
-
-function drawPlannedRoutes() {
-  clearRoutes();
-  addRoute(routes.river, { color: COLORS.red, weight: 4, dashArray: "8 7", opacity: 0.8 });
-  addRoute(routes.fallback, { color: COLORS.amber, weight: 3, dashArray: "4 7", opacity: 0.75 });
-  addRoute(routes.ridge, { color: stage === "planned" ? COLORS.ink : COLORS.green, weight: 6 });
-  map.fitBounds(L.latLngBounds([...routes.river, ...routes.fallback]), { padding: [54, 54] });
-}
-
-function drawReroutedRoutes() {
-  clearRoutes();
-  addRoute(routes.river, { color: COLORS.red, weight: 3, dashArray: "8 7", opacity: 0.52 });
-  addRoute(routes.ridge, { color: COLORS.red, weight: 4, dashArray: "6 7", opacity: 0.72 });
-  addRoute(routes.fallback, { color: COLORS.amber, weight: 6 });
-  if (!closureMarker) {
-    closureMarker = L.marker(points.closure, {
-      icon: markerIcon("New closure", "!", COLORS.red),
-      zIndexOffset: 1000,
-    }).addTo(map);
-  }
-  map.fitBounds(L.latLngBounds(routes.fallback), { padding: [65, 65] });
-}
-
-function setWorkflow(activeIndex) {
-  document.querySelectorAll(".workflow-step").forEach((step, index) => {
-    step.classList.toggle("is-active", index === activeIndex);
-    step.classList.toggle("is-complete", index < activeIndex);
-    const circle = step.querySelector("i");
-    circle.textContent = index < activeIndex ? "✓" : String(index + 1);
+function initMap(id, route = null, interactive = false) {
+  const map = L.map(id, {
+    zoomControl: false,
+    attributionControl: true,
+    dragging: interactive,
+    touchZoom: interactive,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    keyboard: false,
   });
+  addTiles(map);
+  map.setView([28.153, 85.321], 12);
+  if (route) {
+    L.polyline(directRoute, { color: "#858981", weight: 4, opacity: 0.38, dashArray: "6 8" }).addTo(map);
+    L.polyline(route, { color: "#b64d32", weight: 6, opacity: 0.96, lineCap: "round" }).addTo(map);
+    L.marker(points.hub, { icon: marker("Dhunche hub", "#1d1e1a", "○") }).addTo(map);
+    L.marker(points.camp, { icon: marker("Relief Camp A", "#b64d32", "✚") }).addTo(map);
+    L.marker(points.bridge, { icon: marker("Bridge blocked", "#c94738", "!") }).addTo(map);
+    map.fitBounds(L.latLngBounds(route), { padding: [34, 34] });
+  } else {
+    L.marker(points.hub, { icon: marker("Dhunche hub", "#1d1e1a", "○") }).addTo(map);
+    L.marker(points.camp, { icon: marker("Relief Camp A", "#b64d32", "✚") }).addTo(map);
+  }
+  maps[id] = map;
+  setTimeout(() => map.invalidateSize(), 80);
+  return map;
 }
 
-function reveal(element) {
-  element.hidden = false;
-  element.classList.remove("is-revealing");
-  requestAnimationFrame(() => element.classList.add("is-revealing"));
+function showScreen(id) {
+  document.querySelectorAll(".app-screen").forEach((screen) => screen.classList.toggle("is-active", screen.id === id));
+  const map = maps[id.replace("-screen", "-map")];
+  if (map) setTimeout(() => map.invalidateSize(), 60);
 }
 
 function showToast(message) {
+  const toast = document.querySelector("#toast");
   toast.textContent = message;
-  toast.classList.add("is-visible");
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
-function setButton({ label, icon, tone = "primary", note }) {
-  actionLabel.textContent = label;
-  actionIcon.textContent = icon;
-  actionNote.textContent = note;
-  primaryAction.classList.toggle("is-danger", tone === "danger");
-  primaryAction.classList.toggle("is-success", tone === "success");
-  primaryAction.disabled = false;
-}
-
-function setDecisionForFallback() {
-  document.querySelector("#decision-heading").textContent = "REPLANNED ACCESS";
-  document.querySelector("#selected-route-letter").textContent = "C";
-  document.querySelector("#selected-route-name").textContent = "Western fallback";
-  document.querySelector("#selected-route-meta").textContent = "42 km · 2 hr 08 min";
-  const chip = document.querySelector("#selected-route-chip");
-  chip.className = "chip chip-warn";
-  chip.innerHTML = "<i></i> CONDITIONAL";
-  document.querySelector("#route-reason-copy").textContent =
-    "Selected after Team R–4 reported a new washout. Adds 11 km; no known blocked crossings.";
-  const fill = document.querySelector("#confidence-fill");
-  fill.style.width = "68%";
-  fill.style.background = COLORS.amber;
-  document.querySelector("#confidence-value").textContent = "68%";
-  document.querySelector("#field-source").textContent = "Team R–4 · field radio";
-  document.querySelector("#field-detail").textContent = "Washout at km 12 · 3 min ago";
-  document.querySelector("#field-status").textContent = "NEW";
-  document.querySelector("#map-clock").textContent = "UPDATED 14:44";
-}
-
-function analyze() {
-  primaryAction.disabled = true;
-  actionLabel.textContent = "Checking official sources…";
-  actionIcon.textContent = "···";
-  actionNote.textContent = "Comparing access evidence, route geometry and vehicle constraints.";
-  setWorkflow(0);
-
-  window.setTimeout(() => {
-    setWorkflow(1);
-    actionLabel.textContent = "Comparing three route candidates…";
-  }, 520);
-
-  actionTimer = window.setTimeout(() => {
-    stage = "planned";
-    stageNumber.textContent = "02 / 04";
-    stageLabel.textContent = "ROUTE READY · APPROVAL REQUIRED";
-    setWorkflow(2);
-    reveal(decisionPanel);
-    reveal(evidencePanel);
-    drawPlannedRoutes();
-    setButton({
-      label: "Human approve & dispatch",
-      icon: "✓",
-      tone: "success",
-      note: "The recommendation cannot dispatch a team without coordinator approval.",
-    });
-    showToast("3 candidates checked · 1 route rejected by access evidence");
-    decisionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 1120);
-}
-
-function authorize() {
-  stage = "authorized";
-  stageNumber.textContent = "03 / 04";
-  stageLabel.textContent = "TEAM K–2 EN ROUTE";
-  setWorkflow(3);
-  drawPlannedRoutes();
-  setButton({
-    label: "Simulate new road closure",
-    icon: "!",
-    tone: "danger",
-    note: "Demonstrates failure recovery when new field evidence invalidates the active route.",
+function replaceActiveRoute(route) {
+  const map = maps["active-map"];
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Polyline) map.removeLayer(layer);
   });
-  document.querySelector("#selected-route-chip").innerHTML = "<i></i> ACTIVE";
-  showToast("Mission BM–1024 authorized by human coordinator");
+  L.polyline(route, { color: "#b64d32", weight: 7, opacity: 0.96, lineCap: "round" }).addTo(map);
+  map.fitBounds(L.latLngBounds(route), { paddingTopLeft: [44, 145], paddingBottomRight: [44, 260] });
 }
 
-function replan() {
-  stage = "rerouted";
-  stageNumber.textContent = "04 / 04";
-  stageLabel.textContent = "MISSION REPLANNED · CHECK-IN DUE";
-  mapAlert.hidden = false;
-  setDecisionForFallback();
-  drawReroutedRoutes();
-  setButton({
-    label: "Confirm responder check-in",
-    icon: "⌁",
-    tone: "success",
-    note: "Fallback remains conditional until the field team confirms progress.",
-  });
-  showToast("Active route invalidated · fallback selected with lower confidence");
-  window.setTimeout(() => {
-    mapAlert.hidden = true;
-  }, 5200);
-}
-
-function confirmCheckIn() {
-  stage = "checkedIn";
-  stageLabel.textContent = "TEAM K–2 SAFE · 14:47";
-  setButton({
-    label: "Restart training scenario",
-    icon: "↻",
-    tone: "primary",
-    note: "Check-in received. Fallback route active; next scheduled check-in in 20 minutes.",
-  });
-  showToast("Team K–2 checked in safely · position received");
-}
-
-function reset() {
-  window.clearTimeout(actionTimer);
-  stage = "brief";
-  stageNumber.textContent = "01 / 04";
-  stageLabel.textContent = "MISSION AWAITING ANALYSIS";
-  decisionPanel.hidden = true;
-  evidencePanel.hidden = true;
-  workflow.hidden = false;
-  mapAlert.hidden = true;
-  setWorkflow(0);
-  clearRoutes();
-  if (closureMarker) {
-    map.removeLayer(closureMarker);
-    closureMarker = undefined;
-  }
-  map.setView([28.145, 85.323], 12);
-  document.querySelector("#decision-heading").textContent = "ROUTE DECISION";
-  document.querySelector("#selected-route-letter").textContent = "B";
-  document.querySelector("#selected-route-name").textContent = "Ridge relay";
-  document.querySelector("#selected-route-meta").textContent = "31 km · 1 hr 42 min";
-  const chip = document.querySelector("#selected-route-chip");
-  chip.className = "chip chip-good";
-  chip.innerHTML = "<i></i> RECOMMENDED";
-  document.querySelector("#route-reason-copy").textContent =
-    "Latest passability check is 18 minutes old. Avoids the washed river crossing and carries the required vehicle class.";
-  const fill = document.querySelector("#confidence-fill");
-  fill.style.width = "86%";
-  fill.style.background = COLORS.green;
-  document.querySelector("#confidence-value").textContent = "86%";
-  document.querySelector("#field-source").textContent = "Team K–1 · field check";
-  document.querySelector("#field-detail").textContent = "Ridge relay passable · 18 min ago";
-  document.querySelector("#field-status").textContent = "VERIFIED";
-  document.querySelector("#map-clock").textContent = "UPDATED 14:31";
-  setButton({
-    label: "Analyze access evidence",
-    icon: "→",
-    note: "Burning Maps will compare map routes against timestamped access reports.",
-  });
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-primaryAction.addEventListener("click", () => {
-  if (stage === "brief") analyze();
-  else if (stage === "planned") authorize();
-  else if (stage === "authorized") replan();
-  else if (stage === "rerouted") confirmCheckIn();
-  else reset();
+document.querySelector("#begin-mission").addEventListener("click", () => {
+  showScreen("draft-screen");
+  setTimeout(() => maps["draft-map"].fitBounds(L.latLngBounds([points.hub, points.camp]), { padding: [60, 45] }), 100);
 });
 
-window.addEventListener("beforeunload", () => window.clearTimeout(actionTimer));
+document.querySelectorAll(".quick-prompts button").forEach((button) => {
+  button.addEventListener("click", () => document.querySelector("#begin-mission").click());
+});
+
+document.querySelector("#build-route").addEventListener("click", (event) => {
+  const button = event.currentTarget;
+  button.querySelector("span").textContent = "Comparing field evidence…";
+  setTimeout(() => {
+    button.querySelector("span").textContent = "Build relief route";
+    showScreen("route-screen");
+    maps["route-map"].invalidateSize();
+    showToast("3 access options compared · latest field evidence attached");
+  }, 700);
+});
+
+document.querySelector("#route-back").addEventListener("click", () => showScreen("draft-screen"));
+document.querySelector("#active-back").addEventListener("click", () => showScreen("route-screen"));
+
+document.querySelector("#start-route").addEventListener("click", () => {
+  showScreen("active-screen");
+  maps["active-map"].invalidateSize();
+  showToast("Mission started · team check-ins are active");
+});
+
+document.querySelector("#active-action").addEventListener("click", (event) => {
+  if (activeStep > 0) return;
+  activeStep = 1;
+  const button = event.currentTarget;
+  const update = document.querySelector("#route-update");
+  update.hidden = false;
+  button.querySelector("span").textContent = "Replanning…";
+  button.disabled = true;
+  L.marker(points.closure, { icon: marker("New closure", "#c94738", "!") }).addTo(maps["active-map"]);
+  setTimeout(() => {
+    replaceActiveRoute(updatedRoute);
+    update.querySelector("strong").textContent = "Safer access route found";
+    update.querySelector("p").textContent = "Adds 14 min · avoids new slope failure";
+    document.querySelector("#active-kicker").textContent = "ROUTE UPDATED";
+    document.querySelector("#active-title").textContent = "Continue via western ridge";
+    document.querySelector("#active-distance").textContent = "34 km remaining · +14 min";
+    document.querySelector("#active-copy").textContent = "Route changed from a verified field report. Review and check in with your team.";
+    button.hidden = true;
+    document.querySelector("#check-in").hidden = false;
+    showToast("Route updated · human dispatch control preserved");
+  }, 1300);
+});
+
+document.querySelector("#check-in").addEventListener("click", (event) => {
+  event.currentTarget.textContent = "✓ Team checked in";
+  event.currentTarget.disabled = true;
+  document.querySelector("#check-time").textContent = "Checked in just now";
+  document.querySelector("#active-status").innerHTML = "<i></i> TEAM SAFE";
+  showToast("Check-in recorded · next reminder in 20 minutes");
+});
+
+initMap("home-map");
+initMap("draft-map", safeRoute);
+initMap("route-map", safeRoute);
+initMap("active-map", safeRoute);

@@ -3,163 +3,140 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Burning Maps — evidence-aware humanitarian access planning." />
-    <title>Burning Maps · Humanitarian Access Desk</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap" rel="stylesheet" />
+    <meta name="description" content="Burning Maps — a Turtle Maps disaster-response demo." />
+    <title>Burning Maps · Interactive App Demo</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="/" aria-label="Burning Maps home">
-          <span class="brand-mark" aria-hidden="true">↗</span>
-          <span>
-            <strong>BURNING MAPS</strong>
-            <small>HUMANITARIAN ACCESS DESK</small>
-          </span>
-        </a>
-        <div class="operation-meta">
-          <span class="operation-id">NPL–RSW–026</span>
-          <span class="status-beacon"><i></i> JUDGE MODE · NO LOGIN</span>
-        </div>
+    <main class="showcase">
+      <header class="showcase-copy">
+        <div class="showcase-brand"><span>↗</span><strong>BURNING MAPS</strong></div>
+        <p>A TURTLE MAPS RESPONSE MODE</p>
+        <h1>Safer relief routes,<br />with the evidence attached.</h1>
+        <div class="judge-note"><i></i> INTERACTIVE JUDGE DEMO · NO LOGIN</div>
       </header>
 
-      <main>
-        <section class="workspace" aria-label="Mission planning workspace">
-          <div class="workspace-header">
-            <p class="eyebrow">ACTIVE OPERATION · RASUWA, NEPAL</p>
-            <h1>When the road<br />is no longer there.</h1>
-            <p class="lede">Evidence-aware mission planning for teams moving through rapidly changing terrain.</p>
-          </div>
+      <div class="phone-wrap">
+        <div class="phone" aria-label="Burning Maps mobile app">
+          <div class="phone-speaker"></div>
+          <div class="ios-bar"><strong>3:39</strong><span>● ◒ ▰</span></div>
 
-          <div class="stage-strip" aria-live="polite">
-            <span id="stage-number">01 / 04</span>
-            <strong id="stage-label">MISSION AWAITING ANALYSIS</strong>
-          </div>
-
-          <article class="mission-card">
-            <div class="mission-flags">
-              <span class="chip chip-danger"><i></i> HIGH PRIORITY</span>
-              <span class="deadline">ARRIVE BEFORE 17:30</span>
+          <section id="home-screen" class="app-screen map-screen is-active" aria-label="Map home">
+            <div id="home-map" class="full-map"></div>
+            <div class="map-top">
+              <button class="search-card" type="button" aria-label="Relief mission destination">
+                <span class="icon">⌕</span>
+                <span><strong>Where should help go?</strong><small>Search a camp or affected area</small></span>
+                <b>BM</b>
+              </button>
+              <div class="lens"><i></i><span>Burning lens</span><small>access · reports · check-ins</small></div>
             </div>
-            <p class="card-kicker">MISSION BM–1024</p>
-            <h2>Medical resupply to Relief Camp A</h2>
-            <p>Move 24 trauma kits and water-purification tablets from Dhunche logistics hub. Avoid failed crossings and slopes without a field update in the last two hours.</p>
-            <dl class="payload">
-              <div><dt>PAYLOAD</dt><dd>186 kg</dd></div>
-              <div><dt>TEAM</dt><dd>K–2</dd></div>
-              <div><dt>VEHICLE</dt><dd>4×4</dd></div>
-            </dl>
-          </article>
-
-          <section id="workflow" class="workflow" aria-label="Planning workflow">
-            <p class="section-label"><span>01</span> DECISION WORKFLOW</p>
-            <ol>
-              <li class="workflow-step is-active" data-step="research"><i>1</i><span><strong>Check source evidence</strong><small>IOM, Red Cross, field radio</small></span></li>
-              <li class="workflow-step" data-step="compare"><i>2</i><span><strong>Compare route access</strong><small>Freshness, hazards, vehicle class</small></span></li>
-              <li class="workflow-step" data-step="approve"><i>3</i><span><strong>Human dispatch decision</strong><small>Coordinator approval required</small></span></li>
-            </ol>
-          </section>
-
-          <section id="decision-panel" class="decision-panel" hidden>
-            <p class="section-label"><span>02</span> <b id="decision-heading">ROUTE DECISION</b></p>
-
-            <article class="route-card is-selected">
-              <div class="route-card-head">
-                <span id="selected-route-letter" class="route-letter">B</span>
-                <div>
-                  <h3 id="selected-route-name">Ridge relay</h3>
-                  <p id="selected-route-meta">31 km · 1 hr 42 min</p>
-                </div>
-                <span id="selected-route-chip" class="chip chip-good"><i></i> RECOMMENDED</span>
+            <div class="map-tools"><button type="button" aria-label="Map layers">◇</button><button type="button" aria-label="Center map">⌾</button></div>
+            <div class="bottom-sheet intro-sheet">
+              <div class="handle"></div>
+              <div class="sheet-heading">
+                <span class="agent-orb">✦</span>
+                <div><small>PLAN WITH BURNING</small><h2>Describe the mission, not the filters.</h2></div>
               </div>
-              <div class="route-reason">
-                <span aria-hidden="true">⌁</span>
-                <p id="route-reason-copy">Latest passability check is 18 minutes old. Avoids the washed river crossing and carries the required vehicle class.</p>
+              <button id="begin-mission" class="prompt-bar" type="button"><span>Deliver medical kits to an isolated camp…</span><i>↑</i></button>
+              <div class="quick-prompts">
+                <button type="button">✚ Medical resupply</button>
+                <button type="button">⌁ Latest access</button>
               </div>
-              <div class="confidence">
-                <span>EVIDENCE CONFIDENCE</span>
-                <div><i id="confidence-fill"></i></div>
-                <strong id="confidence-value">86%</strong>
-              </div>
-            </article>
-
-            <article class="route-card is-rejected">
-              <div class="route-card-head">
-                <span class="route-letter">A</span>
-                <div>
-                  <h3>River corridor</h3>
-                  <p>24 km · 1 hr 10 min</p>
-                </div>
-                <span class="chip chip-danger"><i></i> REJECTED</span>
-              </div>
-              <p class="rejected-copy">Intersects a bridge marked impassable in two independent updates.</p>
-            </article>
-          </section>
-
-          <section id="evidence-panel" class="evidence-panel" hidden>
-            <p class="section-label"><span>03</span> EVIDENCE LEDGER</p>
-            <div class="evidence-list">
-              <a href="https://asiapacific.iom.int/sites/g/files/tmzbdl671/files/documents/2026-09/iom-nepal-flood-sitrep-2.pdf" target="_blank" rel="noreferrer">
-                <span class="source-icon">§</span>
-                <span><strong>IOM Nepal Flood SitRep</strong><small>Access constraints · public report</small></span>
-                <em>OFFICIAL ↗</em>
-              </a>
-              <a href="https://website-api.nrcs.org/media/highlights/files/Rasuwa_Situation_Update_5.pdf" target="_blank" rel="noreferrer">
-                <span class="source-icon">+</span>
-                <span><strong>Nepal Red Cross update</strong><small>Roads, bridges and relief access</small></span>
-                <em>OFFICIAL ↗</em>
-              </a>
-              <div>
-                <span class="source-icon">⌁</span>
-                <span><strong id="field-source">Team K–1 · field check</strong><small id="field-detail">Ridge relay passable · 18 min ago</small></span>
-                <em id="field-status">VERIFIED</em>
-              </div>
+              <div class="trust-row"><span>♙</span><p>Human approval stays required before dispatch</p><b>›</b></div>
             </div>
           </section>
 
-          <div class="action-dock">
-            <button id="primary-action" type="button">
-              <span>Analyze access evidence</span>
-              <i aria-hidden="true">→</i>
-            </button>
-            <p id="action-note">Burning Maps will compare map routes against timestamped access reports.</p>
-          </div>
+          <section id="draft-screen" class="app-screen map-screen" aria-label="Mission draft">
+            <div id="draft-map" class="full-map"></div>
+            <div class="map-top">
+              <div class="search-card destination-search">
+                <span class="icon">⌕</span>
+                <span><strong>Relief Camp A</strong><small>Rasuwa · affected area</small></span>
+                <b>×</b>
+              </div>
+              <div class="lens"><i></i><span>Burning lens</span><small>destination ready</small></div>
+            </div>
+            <div class="map-tools"><button type="button">◇</button><button type="button">⌾</button></div>
+            <div class="bottom-sheet draft-sheet">
+              <div class="handle"></div>
+              <div class="destination-row">
+                <span class="pin">●</span>
+                <div><small>DESTINATION SET</small><h2>Relief Camp A</h2></div>
+                <span class="close">×</span>
+              </div>
+              <div class="smart-row"><span>▣ &nbsp;4×4 response vehicle</span><small>Smart defaults applied</small></div>
+              <div class="brief-field"><b>✦</b><p>24 trauma kits. Avoid failed bridges and access reports older than two hours.</p></div>
+              <button id="build-route" class="primary-button" type="button"><span>Build relief route</span><i>→</i></button>
+              <button class="text-button" type="button">Timing, check-ins & team options&nbsp; ›</button>
+            </div>
+          </section>
 
-          <aside class="safety-note">
-            <strong>PROTOTYPE BOUNDARY</strong>
-            <p>Routes, teams and field events are simulated for this hackathon. This build is decision support research—not certified rescue software or live navigation.</p>
-          </aside>
-        </section>
+          <section id="route-screen" class="app-screen scroll-screen" aria-label="Route choices">
+            <nav class="app-nav"><button id="route-back" type="button">‹</button><div class="compact-brand"><span>↗</span><b>BURNING MAPS</b></div><span class="judge-chip">DEMO</span></nav>
+            <div class="route-content">
+              <span class="status-pill">ROUTE READY</span>
+              <h2>Medical resupply</h2>
+              <p class="screen-lede">Dhunche logistics hub → Relief Camp A</p>
+              <div class="route-map-shell">
+                <div id="route-map"></div>
+                <span class="map-chip">↗ &nbsp; Full route preview</span>
+                <div class="route-card selected">
+                  <div><strong>Safer access</strong><span>TOP PICK</span></div>
+                  <b>1 hr 42 min</b>
+                  <p>Recently verified ridge access · avoids failed bridge</p>
+                  <small>1 OF 3 &nbsp;·&nbsp; EVIDENCE RANKED</small>
+                </div>
+              </div>
+              <div class="preference-applied">✦ <span>Mission brief applied: recent access · 4×4 · medical priority</span></div>
+              <div class="evidence-card">
+                <div class="evidence-title"><span class="agent-orb small">✦</span><div><small>BURNING LENS</small><strong>Why this route?</strong></div></div>
+                <p>The shorter river route crosses a bridge reported impassable by two sources. Ridge access was field-checked 18 minutes ago.</p>
+                <div class="source-links">
+                  <a href="https://asiapacific.iom.int/sites/g/files/tmzbdl671/files/documents/2026-09/iom-nepal-flood-sitrep-2.pdf" target="_blank" rel="noreferrer">IOM SitRep ↗</a>
+                  <a href="https://website-api.nrcs.org/media/highlights/files/Rasuwa_Situation_Update_5.pdf" target="_blank" rel="noreferrer">Red Cross ↗</a>
+                  <span>Confidence 86%</span>
+                </div>
+              </div>
+              <div class="metric-list">
+                <div><i>⌁</i><span><small>Selected access</small><strong>Ridge relay · 31 km</strong></span></div>
+                <div><i>◷</i><span><small>Expected arrival</small><strong>Today at 5:21 PM</strong></span></div>
+                <div><i>◎</i><span><small>Team check-in</small><strong>Every 20 minutes</strong></span></div>
+              </div>
+              <button id="start-route" class="primary-button fixed-action" type="button"><span>Start selected route</span><i>↗</i></button>
+              <p class="prototype-note">Training simulation · not for live rescue or navigation</p>
+            </div>
+          </section>
 
-        <section class="map-pane" aria-label="Access map">
-          <div id="map" role="application" aria-label="Simulated humanitarian access map in Rasuwa, Nepal"></div>
-          <div class="map-overlay map-title">
-            <small>TRAINING ACCESS PICTURE</small>
-            <strong>DHUNCHE → RELIEF CAMP A</strong>
-          </div>
-          <div class="map-overlay legend">
-            <span><i class="line-good"></i> ACTIVE</span>
-            <span><i class="line-warn"></i> UNCERTAIN</span>
-            <span><i class="line-bad"></i> BLOCKED</span>
-          </div>
-          <div class="map-overlay map-clock">
-            <small>COMMON OPERATING PICTURE</small>
-            <strong id="map-clock">UPDATED 14:31</strong>
-          </div>
-          <div id="map-alert" class="map-alert" hidden>
-            <span>!</span>
-            <div><strong>NEW FIELD REPORT</strong><p>Team R–4 reports washout at km 12</p></div>
-          </div>
-        </section>
-      </main>
-    </div>
+          <section id="active-screen" class="app-screen map-screen" aria-label="Active relief journey">
+            <div id="active-map" class="full-map"></div>
+            <div class="active-top">
+              <button id="active-back" type="button">‹</button>
+              <div><small id="active-kicker">MISSION ACTIVE</small><strong id="active-title">Continue on ridge access</strong><span id="active-distance">31 km remaining</span></div>
+              <span class="nav-arrow">↗</span>
+            </div>
+            <div id="route-update" class="route-update" hidden><span>!</span><div><small>ACCESS UPDATE</small><strong>New closure reported ahead</strong><p>Replanning from verified field evidence…</p></div></div>
+            <div class="bottom-sheet active-sheet">
+              <div class="handle"></div>
+              <div class="active-heading">
+                <div><small>EN ROUTE TO</small><h2>Relief Camp A</h2></div>
+                <span id="active-status" class="live-pill"><i></i> AGENT LIVE</span>
+              </div>
+              <p id="active-copy">Monitoring access reports and your next safety check-in.</p>
+              <div class="next-check"><span>◷</span><div><small>NEXT CHECK-IN</small><strong id="check-time">18 minutes</strong></div><span>Team K–2</span></div>
+              <button id="active-action" class="primary-button" type="button"><span>Simulate access change</span><i>!</i></button>
+              <button id="check-in" class="secondary-button" type="button" hidden>Check in now</button>
+            </div>
+          </section>
+
+          <div class="home-indicator"></div>
+        </div>
+        <p class="phone-hint">Tap through the real mobile workflow · no account required</p>
+      </div>
+    </main>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="./app.js"></script>
   </body>

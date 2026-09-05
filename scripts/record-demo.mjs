@@ -12,7 +12,8 @@ const context = await browser.newContext({
   colorScheme: "light",
 });
 const page = await context.newPage();
-await page.goto("https://burning-maps.vercel.app", { waitUntil: "networkidle" });
+await page.goto("https://burning-maps.vercel.app", { waitUntil: "domcontentloaded" });
+await page.waitForTimeout(1800);
 
 await page.addStyleTag({
   content: `
@@ -25,8 +26,8 @@ await page.addStyleTag({
       transform: translateX(-50%);
       padding: 15px 22px;
       color: #fffdf7;
-      background: rgba(23, 25, 20, 0.94);
-      border-left: 5px solid #e85d2a;
+      background: rgba(17, 18, 15, 0.94);
+      border-left: 5px solid #b64d32;
       box-shadow: 0 18px 60px rgba(23, 25, 20, 0.28);
       font: 700 18px/1.3 "IBM Plex Sans Condensed", sans-serif;
       letter-spacing: 0.02em;
@@ -47,26 +48,29 @@ async function caption(text, duration = 2600) {
   await page.waitForTimeout(duration);
 }
 
-await caption("After a flood, the shortest route on an ordinary map may no longer exist.", 3200);
-await caption("Burning Maps turns timestamped reports into a human-approved relief mission.", 3000);
+await caption("This is Turtle Maps in a disaster-response mode — the same map-first mobile workflow.", 3200);
+await caption("No login is required for judging. Start with a plain-language relief mission.", 2800);
 
-await page.getByRole("button", { name: "Analyze access evidence" }).click();
-await caption("First, it checks official sources and field observations against every route candidate.", 3400);
+await page.locator("#begin-mission").click();
+await caption("Destination, vehicle and mission constraints stay together in the familiar Turtle route draft.", 3200);
 
-await page.locator("#decision-panel").scrollIntoViewIfNeeded();
-await caption("The faster river corridor is rejected because two reports mark its bridge impassable.", 3500);
-await caption("Every recommendation keeps source age and confidence visible.", 2800);
+await page.locator("#build-route").click();
+await page.waitForTimeout(900);
+await caption("Burning Lens compares route options using timestamped official and field evidence.", 3400);
+await caption("The faster river route is rejected because two reports mark its bridge impassable.", 3300);
+await caption("Sources and confidence stay visible before a human starts the selected route.", 2900);
 
-await page.getByRole("button", { name: "Human approve & dispatch" }).click();
-await caption("The system cannot dispatch by itself. A coordinator remains accountable.", 3000);
+await page.locator("#start-route").click();
+await caption("The active mission keeps Turtle's live map and safety check-in workflow.", 3000);
 
-await page.getByRole("button", { name: "Simulate new road closure" }).click();
-await caption("A new field report now invalidates the active route.", 2900);
-await caption("The workflow recovers: it selects a longer fallback and lowers confidence instead of silently rerouting.", 3900);
+await page.locator("#active-action").click();
+await caption("A new access report invalidates the route while the team is moving.", 2800);
+await page.waitForTimeout(1400);
+await caption("Burning Maps proposes the verified fallback and keeps dispatch control with the team.", 3400);
 
-await page.getByRole("button", { name: "Confirm responder check-in" }).click();
-await caption("Team K–2 checks in safely. The access desk schedules the next confirmation.", 3200);
-await caption("When floods erase the road, Burning Maps helps teams decide what remains reachable.", 3800);
+await page.locator("#check-in").click();
+await caption("Team K–2 checks in safely; the next confirmation remains scheduled.", 3000);
+await caption("When floods erase the road, Burning Maps helps teams decide what remains reachable.", 3400);
 await caption("Try it now: burning-maps.vercel.app", 3200);
 
 const video = page.video();
