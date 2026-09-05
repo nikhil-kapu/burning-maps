@@ -116,6 +116,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   background: rgba(252,251,248,.97); box-shadow: 0 4px 14px rgba(17,18,15,.18);
   font-size: 20px;
 }
+.map-tools button[aria-pressed="true"] { color: var(--white); background: var(--accent); }
 
 .bottom-sheet {
   position: absolute; z-index: 20; left: 11px; right: 11px; bottom: 13px;
@@ -159,7 +160,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   border-radius: 14px; color: var(--white); background: var(--accent);
 }
 .destination-row > div { flex: 1; }
-.destination-row .close { color: var(--muted); font-size: 20px; }
+.destination-row .close { width: 36px; height: 36px; border: 0; border-radius: 12px; color: var(--muted); background: var(--cream); font-size: 20px; }
 .smart-row { min-height: 34px; display: flex; align-items: center; gap: 8px; margin-top: 6px; }
 .smart-row span { padding: 6px 9px; border-radius: 17px; color: var(--forest); background: var(--sage-soft); font-size: 10px; font-weight: 800; }
 .smart-row small { color: var(--muted); font-size: 9px; }
@@ -177,7 +178,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   border-radius: 14px; color: var(--accent); background: var(--paper); font-size: 19px; font-style: normal;
 }
 .primary-button:active { transform: scale(.99); }
+.primary-button:disabled, .secondary-button:disabled { cursor: default; opacity: .62; }
 .text-button { width: 100%; min-height: 31px; color: var(--muted); border: 0; background: none; font-size: 10px; font-weight: 700; }
+.trip-options { display: flex; flex-wrap: wrap; gap: 5px; padding: 3px 0 2px; }
+.trip-options span { padding: 5px 7px; border-radius: 9px; color: var(--forest); background: var(--sage-soft); font-size: 8px; font-weight: 700; }
 
 .scroll-screen { overflow-y: auto; background: var(--cream); scrollbar-width: none; }
 .scroll-screen::-webkit-scrollbar { display: none; }
@@ -201,12 +205,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   padding: 12px; border: 1.5px solid var(--accent); border-radius: 20px;
   background: rgba(252,251,248,.97); box-shadow: 0 7px 15px rgba(17,18,15,.13);
 }
-.route-card > div { display: flex; align-items: center; gap: 6px; }
-.route-card > div strong { font-size: 15px; }
-.route-card > div span { padding: 3px 6px; border-radius: 99px; color: white; background: var(--deep); font-size: 6px; font-weight: 900; letter-spacing: .6px; }
+.route-card-heading { display: flex; align-items: center; gap: 6px; }
+.route-card-heading strong { font-size: 15px; }
+.route-card-heading span { padding: 3px 6px; border-radius: 99px; color: white; background: var(--deep); font-size: 6px; font-weight: 900; letter-spacing: .6px; }
 .route-card > b { position: absolute; top: 13px; right: 12px; font-size: 12px; }
 .route-card p { margin: 9px 0 8px; color: var(--muted); font-size: 9px; }
 .route-card small { color: var(--accent); font-size: 7px; font-weight: 900; letter-spacing: .6px; }
+.route-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.route-card-footer button { min-height: 28px; padding: 0 8px; border: 0; border-radius: 9px; color: var(--forest); background: var(--sage-soft); font-size: 8px; font-weight: 900; }
+.route-card.is-blocked { border-color: var(--danger); background: rgba(255,241,237,.98); }
+.route-card.is-blocked .route-card-heading span { background: var(--danger); }
 .preference-applied { display: flex; gap: 7px; padding: 12px 3px; color: var(--accent); font-size: 10px; font-weight: 700; }
 .preference-applied span { color: var(--forest); }
 .evidence-card { padding: 15px; border-radius: 22px; color: white; background: var(--deep); }

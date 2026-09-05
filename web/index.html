@@ -25,14 +25,14 @@
           <section id="home-screen" class="app-screen map-screen is-active" aria-label="Map home">
             <div id="home-map" class="full-map"></div>
             <div class="map-top">
-              <button class="search-card" type="button" aria-label="Relief mission destination">
+              <button id="home-search" class="search-card" type="button" aria-label="Choose relief mission destination">
                 <span class="icon">⌕</span>
                 <span><strong>Where should help go?</strong><small>Search a camp or affected area</small></span>
                 <b>BM</b>
               </button>
               <div class="lens"><i></i><span>Burning lens</span><small>access · reports · check-ins</small></div>
             </div>
-            <div class="map-tools"><button type="button" aria-label="Map layers">◇</button><button type="button" aria-label="Center map">⌾</button></div>
+            <div class="map-tools"><button class="layer-toggle" data-map="home-map" type="button" aria-label="Toggle relief access overlay" aria-pressed="false">◇</button><button class="recenter-map" data-map="home-map" type="button" aria-label="Center map on mission area">⌾</button></div>
             <div class="bottom-sheet intro-sheet">
               <div class="handle"></div>
               <div class="sheet-heading">
@@ -51,25 +51,30 @@
           <section id="draft-screen" class="app-screen map-screen" aria-label="Mission draft">
             <div id="draft-map" class="full-map"></div>
             <div class="map-top">
-              <div class="search-card destination-search">
+              <button id="change-destination" class="search-card destination-search" type="button" aria-label="Change relief mission destination">
                 <span class="icon">⌕</span>
                 <span><strong>Relief Camp A</strong><small>Rasuwa · affected area</small></span>
                 <b>×</b>
-              </div>
+              </button>
               <div class="lens"><i></i><span>Burning lens</span><small>destination ready</small></div>
             </div>
-            <div class="map-tools"><button type="button">◇</button><button type="button">⌾</button></div>
+            <div class="map-tools"><button class="layer-toggle" data-map="draft-map" type="button" aria-label="Toggle relief access overlay" aria-pressed="false">◇</button><button class="recenter-map" data-map="draft-map" type="button" aria-label="Center map on selected route">⌾</button></div>
             <div class="bottom-sheet draft-sheet">
               <div class="handle"></div>
               <div class="destination-row">
                 <span class="pin">●</span>
                 <div><small>DESTINATION SET</small><h2>Relief Camp A</h2></div>
-                <span class="close">×</span>
+                <button id="cancel-draft" class="close" type="button" aria-label="Clear destination">×</button>
               </div>
               <div class="smart-row"><span>▣ &nbsp;4×4 response vehicle</span><small>Smart defaults applied</small></div>
               <div class="brief-field"><b>✦</b><p>24 trauma kits. Avoid failed bridges and access reports older than two hours.</p></div>
               <button id="build-route" class="primary-button" type="button"><span>Build relief route</span><i>→</i></button>
-              <button class="text-button" type="button">Timing, check-ins & team options&nbsp; ›</button>
+              <button id="toggle-options" class="text-button" type="button" aria-expanded="false">Timing, check-ins & team options&nbsp; ›</button>
+              <div id="trip-options" class="trip-options" hidden>
+                <span>◷ Check in every 20 min</span>
+                <span>♙ Team K–2</span>
+                <span>✓ Human dispatch approval</span>
+              </div>
             </div>
           </section>
 
@@ -82,25 +87,25 @@
               <div class="route-map-shell">
                 <div id="route-map"></div>
                 <span class="map-chip">↗ &nbsp; Full route preview</span>
-                <div class="route-card selected">
-                  <div><strong>Safer access</strong><span>TOP PICK</span></div>
-                  <b>1 hr 42 min</b>
-                  <p>Recently verified ridge access · avoids failed bridge</p>
-                  <small>1 OF 3 &nbsp;·&nbsp; EVIDENCE RANKED</small>
+                <div id="route-card" class="route-card selected">
+                  <div class="route-card-heading"><strong id="route-label">Safer access</strong><span id="route-badge">TOP PICK</span></div>
+                  <b id="route-time">1 hr 42 min</b>
+                  <p id="route-summary">Recently verified ridge access · avoids failed bridge</p>
+                  <div class="route-card-footer"><small id="route-meta">1 OF 3 &nbsp;·&nbsp; EVIDENCE RANKED</small><button id="next-route" type="button" aria-label="Compare next route">Next route&nbsp; ›</button></div>
                 </div>
               </div>
               <div class="preference-applied">✦ <span>Mission brief applied: recent access · 4×4 · medical priority</span></div>
               <div class="evidence-card">
                 <div class="evidence-title"><span class="agent-orb small">✦</span><div><small>BURNING LENS</small><strong>Why this route?</strong></div></div>
-                <p>The shorter river route crosses a bridge reported impassable by two sources. Ridge access was field-checked 18 minutes ago.</p>
+                <p id="evidence-copy">The shorter river route crosses a bridge reported impassable by two sources. Ridge access was field-checked 18 minutes ago.</p>
                 <div class="source-links">
                   <a href="https://asiapacific.iom.int/sites/g/files/tmzbdl671/files/documents/2026-09/iom-nepal-flood-sitrep-2.pdf" target="_blank" rel="noreferrer">IOM SitRep ↗</a>
                   <a href="https://website-api.nrcs.org/media/highlights/files/Rasuwa_Situation_Update_5.pdf" target="_blank" rel="noreferrer">Red Cross ↗</a>
-                  <span>Confidence 86%</span>
+                  <span id="route-confidence">Confidence 86%</span>
                 </div>
               </div>
               <div class="metric-list">
-                <div><i>⌁</i><span><small>Selected access</small><strong>Ridge relay · 31 km</strong></span></div>
+                <div><i>⌁</i><span><small>Selected access</small><strong id="selected-access">Ridge relay · 31 km</strong></span></div>
                 <div><i>◷</i><span><small>Expected arrival</small><strong>Today at 5:21 PM</strong></span></div>
                 <div><i>◎</i><span><small>Team check-in</small><strong>Every 20 minutes</strong></span></div>
               </div>
