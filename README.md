@@ -8,14 +8,16 @@ The Nepal scenario is a clearly labeled training simulation based on public situ
 
 ## Try the hackathon demo
 
-The public build launches directly into the no-login Burning Maps scenario. For local development:
+The no-login interactive web build is available at **[burning-maps.vercel.app](https://burning-maps.vercel.app)**.
+
+The iOS build launches directly into the same public demo mode. For local development:
 
 ```bash
 npm ci
 EXPO_PUBLIC_BURNING_MAPS_DEMO=true npm run ios
 ```
 
-The judge build is a bundled iOS Simulator release hosted through Appetize, so it can be operated from a normal browser without TestFlight or an Apple device.
+The repository also produces a bundled iOS Simulator release suitable for Appetize. The web build is the primary judging URL because it is immediately accessible without an Appetize account, TestFlight, or an Apple device.
 
 See [`SUBMISSION.md`](SUBMISSION.md) for the demo script and form-ready copy, and [`HACKATHON_CHANGELOG.md`](HACKATHON_CHANGELOG.md) for a precise separation of pre-existing and September 5 work.
 

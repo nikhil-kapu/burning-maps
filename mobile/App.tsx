@@ -7,7 +7,6 @@ import React, { useEffect } from "react";
 import { LogBox, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "./src/auth/AuthContext";
-import "./src/location/background";
 import { RootNavigator } from "./src/navigation/RootNavigator";
 import { getPendingInvite } from "./src/auth/pendingInvite";
 import type { AppStackParamList, AuthStackParamList } from "./src/types";
@@ -16,6 +15,10 @@ import { BurningMapsDemo } from "./src/burning-maps/BurningMapsDemo";
 const universalLinkOrigin = process.env.EXPO_PUBLIC_UNIVERSAL_LINK_ORIGIN;
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 const burningMapsDemo = process.env.EXPO_PUBLIC_BURNING_MAPS_DEMO === "true";
+
+if (!burningMapsDemo) {
+  require("./src/location/background");
+}
 
 if (__DEV__) {
   LogBox.ignoreLogs(["Clerk: Clerk has been loaded with development keys."]);

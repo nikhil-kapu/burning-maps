@@ -24,7 +24,7 @@ These components are credited as pre-existing and are not presented as work comp
 - Added route rejection when a candidate intersects a reported failed bridge.
 - Added an interactive new-closure event, failure recovery, fallback-route selection, and responder check-in.
 - Added clear simulation and safety labeling.
-- Added a browser-accessible iOS delivery path using an Appetize simulator build.
+- Produced an Appetize-ready iOS Simulator package and added a responsive public web version for immediate no-login judging access.
 
 ## Safety and data disclosure
 

@@ -26,7 +26,7 @@ We began with the pre-existing Turtle Maps mobile shell, MapKit route architectu
 
 ### Working app
 
-`PASTE_PUBLIC_APPETIZE_LINK`
+https://burning-maps.vercel.app
 
 Test steps:
 
@@ -45,7 +45,7 @@ No account or private credentials are required.
 
 ### Repository
 
-`PASTE_GITHUB_REPOSITORY_LINK`
+https://github.com/nikhil-kapu/burning-maps
 
 ## Challenge entries
 
