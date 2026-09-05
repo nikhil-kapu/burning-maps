@@ -1,0 +1,37 @@
+{
+  "name": "turtle-buddy-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env.local --import tsx src/server.ts",
+    "dev:watch": "node --env-file-if-exists=.env.local --import tsx --watch src/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "db:migrate": "node --import tsx src/scripts/migrate.ts",
+    "db:seed": "node --import tsx src/scripts/seed.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.890.0",
+    "@clerk/backend": "^3.16.12",
+    "@clerk/fastify": "^3.1.73",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/rate-limit": "^10.3.0",
+    "fastify": "^5.6.1",
+    "jose": "^6.1.0",
+    "pg": "^8.16.3",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@types/pg": "^8.15.5",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

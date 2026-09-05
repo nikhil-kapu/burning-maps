@@ -1,0 +1,22 @@
+{
+  "name": "turtle-maps",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "backend"
+  ],
+  "scripts": {
+    "postinstall": "patch-package",
+    "check": "npm run check -w backend && npm run check -w mobile",
+    "test": "npm run test -w backend",
+    "test:e2e": "node backend/test/e2e-local.mjs",
+    "dev:api": "npm run dev -w backend",
+    "dev:api:watch": "npm run dev:watch -w backend",
+    "dev:mobile": "npm run start -w mobile",
+    "ios": "npm run ios -w mobile"
+  },
+  "devDependencies": {
+    "patch-package": "^8.0.1"
+  }
+}

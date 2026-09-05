@@ -1,0 +1,15 @@
+node_modules/
+.npm-cache/
+.expo/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.log
+.DS_Store
+mobile/ios/
+mobile/android/
+backend/data/
+infra/runtime/

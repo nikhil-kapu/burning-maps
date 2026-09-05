@@ -1,0 +1,24 @@
+{
+  email {$TLS_EMAIL}
+  admin off
+}
+
+{$DOMAIN} {
+  encode zstd gzip
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    -Server
+  }
+
+  @api path /v1/* /s/* /invite/* /.well-known/apple-app-site-association /health/*
+  reverse_proxy @api api:8080
+
+  respond / 200 {
+    body "Turtle Buddy API"
+    close
+  }
+  respond 404
+}

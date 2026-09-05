@@ -1,0 +1,75 @@
+{
+  "expo": {
+    "name": "Turtle Maps",
+    "slug": "turtle-buddy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "turtlebuddy",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F3E8"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.turtlebuddy.app",
+      "usesAppleSignIn": true,
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Turtle Maps uses your location to preview a route from your current position and to monitor progress during an active journey.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "When you enable continuous journey tracking, Turtle Maps uses background location only while that journey is active.",
+        "NSUserNotificationsUsageDescription": "Turtle Maps sends route changes, check-in reminders, and journey updates you choose.",
+        "UIBackgroundModes": [
+          "location",
+          "remote-notification"
+        ]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.turtlebuddy.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#173F35"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@clerk/expo",
+      "expo-secure-store",
+      "expo-apple-authentication",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Turtle Maps to use your location only during active journeys."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#173F35"
+        }
+      ],
+      "expo-web-browser"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: turtle_buddy
+      POSTGRES_USER: turtle
+      POSTGRES_PASSWORD: turtle
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - turtle_buddy_local_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U turtle -d turtle_buddy"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  turtle_buddy_local_db:
+

@@ -1,0 +1,12 @@
+node_modules
+.npm-cache
+.expo
+.git
+mobile/dist
+backend/dist
+coverage
+*.log
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
