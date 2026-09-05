@@ -210,8 +210,13 @@ export function BurningMapsDemo() {
             </View>
             <View style={styles.livePill}>
               <View style={styles.liveDot} />
-              <Text style={styles.liveText}>DEMO</Text>
+              <Text style={styles.liveText}>JUDGE MODE</Text>
             </View>
+          </View>
+
+          <View style={styles.judgeBanner}>
+            <Ionicons name="lock-open-outline" size={13} color={COLORS.white} />
+            <Text style={styles.judgeBannerText}>NO LOGIN · NO LOCATION · START IMMEDIATELY</Text>
           </View>
 
           <Text style={styles.hero}>When the road{`\n`}is no longer there.</Text>
@@ -429,6 +434,8 @@ const styles = StyleSheet.create({
   livePill: { marginLeft: "auto", flexDirection: "row", alignItems: "center", gap: 6, borderWidth: 1, borderColor: "#484B42", borderRadius: 99, paddingHorizontal: 10, paddingVertical: 6 },
   liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: COLORS.orange },
   liveText: { color: COLORS.white, fontSize: 9, fontWeight: "900", letterSpacing: 1.2 },
+  judgeBanner: { marginTop: 18, paddingHorizontal: 10, paddingVertical: 8, borderWidth: 1, borderColor: "#484B42", flexDirection: "row", alignItems: "center", gap: 7 },
+  judgeBannerText: { color: "#D9DAD4", fontSize: 8, fontWeight: "900", letterSpacing: 0.9 },
   hero: { marginTop: 31, color: COLORS.white, fontSize: 42, lineHeight: 43, letterSpacing: -1.8, fontWeight: "700", fontFamily: "Georgia" },
   heroSub: { marginTop: 12, color: "#C7C9C1", fontSize: 14, lineHeight: 20, maxWidth: 330, fontFamily: "Avenir Next" },
   operationBar: { marginTop: 24, paddingTop: 13, borderTopWidth: 1, borderTopColor: "#3B3D37", flexDirection: "row", alignItems: "center" },

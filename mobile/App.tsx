@@ -14,7 +14,7 @@ import { BurningMapsDemo } from "./src/burning-maps/BurningMapsDemo";
 
 const universalLinkOrigin = process.env.EXPO_PUBLIC_UNIVERSAL_LINK_ORIGIN;
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-const burningMapsDemo = process.env.EXPO_PUBLIC_BURNING_MAPS_DEMO === "true";
+const burningMapsDemo = process.env.EXPO_PUBLIC_BURNING_MAPS_DEMO !== "false";
 
 if (!burningMapsDemo) {
   require("./src/location/background");
