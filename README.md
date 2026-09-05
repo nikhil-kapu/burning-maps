@@ -1,10 +1,29 @@
-# Turtle Maps
+# Burning Maps
 
-Turtle Maps is an iOS-first agentic journey map for solo travelers. A traveler chooses a destination, describes the journey they want in natural language, selects how they are traveling, and chooses the people who should expect them. During an active journey, the route agent can share meaningful timing changes by push or an explicitly opted-in call. If a check-in is missed, a separate deterministic escalation ladder reminds the traveler, optionally places a wellness call, then notifies only approved contacts.
+> When floods erase the road, Burning Maps turns timestamped field reports into safer, human-approved relief missions.
 
-Turtle Maps never automatically calls emergency services. Route-agent updates cannot trigger the safety escalation path.
+Burning Maps is an evidence-aware field-operations prototype created for the Burning Token hackathon. The public demo lets a relief coordinator compare routes against sourced access reports, reject a route crossing a failed bridge, approve dispatch, recover from a newly reported closure, and confirm the responder's check-in.
 
-## Product surfaces
+The Nepal scenario is a clearly labeled training simulation based on public situation reports from [IOM](https://asiapacific.iom.int/sites/g/files/tmzbdl671/files/documents/2026-09/iom-nepal-flood-sitrep-2.pdf) and the [Nepal Red Cross Society](https://website-api.nrcs.org/media/highlights/files/Rasuwa_Situation_Update_5.pdf). It is decision-support research, not certified rescue software or live navigation.
+
+## Try the hackathon demo
+
+The public build launches directly into the no-login Burning Maps scenario. For local development:
+
+```bash
+npm ci
+EXPO_PUBLIC_BURNING_MAPS_DEMO=true npm run ios
+```
+
+The judge build is a bundled iOS Simulator release hosted through Appetize, so it can be operated from a normal browser without TestFlight or an Apple device.
+
+See [`SUBMISSION.md`](SUBMISSION.md) for the demo script and form-ready copy, and [`HACKATHON_CHANGELOG.md`](HACKATHON_CHANGELOG.md) for a precise separation of pre-existing and September 5 work.
+
+## Pre-existing Turtle Maps foundation
+
+Burning Maps starts from Turtle Maps, an iOS-first agentic journey map for solo travelers. Turtle Maps supplies the existing mobile shell, MapKit integration, route-candidate architecture, journey monitoring, and check-in primitives described below.
+
+### Foundation product surfaces
 
 - Low-friction authentication through Clerk: one Google button handles signup or signin, email signup needs only email and password, optional usernames remain available for signin, and age confirmation happens once after the first authenticated account creation. Terms and Privacy are readable in-app and acknowledged through concise continuation copy instead of blocking switches. Apple appears automatically after Apple Developer credentials are configured.
 - Clear welcome and account setup, followed by contextual location, notification, and safety-circle guidance when those features are used.

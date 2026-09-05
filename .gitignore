@@ -13,3 +13,4 @@ mobile/ios/
 mobile/android/
 backend/data/
 infra/runtime/
+*.app.zip

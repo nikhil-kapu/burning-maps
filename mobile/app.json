@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Turtle Maps",
-    "slug": "turtle-buddy",
+    "name": "Burning Maps",
+    "slug": "burning-maps",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "scheme": "turtlebuddy",
+    "scheme": "burningmaps",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.turtlebuddy.app",
+      "bundleIdentifier": "dev.nerdconf.burningmaps",
       "usesAppleSignIn": true,
       "buildNumber": "1",
       "infoPlist": {
@@ -31,7 +31,7 @@
       }
     },
     "android": {
-      "package": "com.turtlebuddy.app",
+      "package": "dev.nerdconf.burningmaps",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#173F35"

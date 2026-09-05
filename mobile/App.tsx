@@ -11,9 +11,11 @@ import "./src/location/background";
 import { RootNavigator } from "./src/navigation/RootNavigator";
 import { getPendingInvite } from "./src/auth/pendingInvite";
 import type { AppStackParamList, AuthStackParamList } from "./src/types";
+import { BurningMapsDemo } from "./src/burning-maps/BurningMapsDemo";
 
 const universalLinkOrigin = process.env.EXPO_PUBLIC_UNIVERSAL_LINK_ORIGIN;
 const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const burningMapsDemo = process.env.EXPO_PUBLIC_BURNING_MAPS_DEMO === "true";
 
 if (__DEV__) {
   LogBox.ignoreLogs(["Clerk: Clerk has been loaded with development keys."]);
@@ -82,6 +84,13 @@ function PendingInviteHandler() {
 }
 
 export default function App() {
+  if (burningMapsDemo) {
+    return (
+      <SafeAreaProvider>
+        <BurningMapsDemo />
+      </SafeAreaProvider>
+    );
+  }
   if (!clerkPublishableKey) throw new Error("EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required.");
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
