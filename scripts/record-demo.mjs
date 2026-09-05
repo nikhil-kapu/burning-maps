@@ -7,8 +7,8 @@ await mkdir(outputDir, { recursive: true });
 
 const browser = await chromium.launch();
 const context = await browser.newContext({
-  viewport: { width: 450, height: 920 },
-  recordVideo: { dir: outputDir, size: { width: 450, height: 920 } },
+  viewport: { width: 410, height: 920 },
+  recordVideo: { dir: outputDir, size: { width: 410, height: 920 } },
   colorScheme: "light",
 });
 const page = await context.newPage();

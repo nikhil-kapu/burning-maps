@@ -55,9 +55,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 }
 .judge-note i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
 
-.phone-wrap { width: 430px; text-align: center; }
+.phone-wrap { width: 400px; text-align: center; }
 .phone {
-  position: relative; width: 410px; height: min(850px, calc(100vh - 78px)); min-height: 690px;
+  position: relative; width: 370px; height: min(850px, calc(100vh - 78px)); min-height: 690px;
   margin: auto; overflow: hidden; border: 9px solid #050504; border-radius: 52px;
   background: var(--cream); box-shadow: 0 35px 90px rgba(0,0,0,.46), inset 0 0 0 1px #343632;
 }
@@ -288,7 +288,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
   .showcase { padding: 18px 0 28px; }
   .phone-wrap { width: 100%; }
 }
-@media (max-width: 420px) {
+@media (max-width: 380px) {
   .showcase { padding: 0; }
   .showcase-copy, .phone-hint { display: none; }
   .phone { width: 100vw; height: 100dvh; min-height: 620px; border: 0; border-radius: 0; }
