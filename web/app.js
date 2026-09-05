@@ -11,6 +11,7 @@ const directRoute = [points.hub, [28.124, 85.315], points.bridge, [28.175, 85.34
 const safeRoute = [points.hub, points.junction, [28.151, 85.302], points.ridge, [28.185, 85.331], points.camp];
 const updatedRoute = [points.hub, [28.123, 85.295], [28.154, 85.289], [28.178, 85.311], points.camp];
 const maps = {};
+const mapRoutes = {};
 let activeStep = 0;
 let toastTimer;
 
@@ -43,6 +44,7 @@ function initMap(id, route = null, interactive = false) {
   addTiles(map);
   map.setView([28.153, 85.321], 12);
   if (route) {
+    mapRoutes[id] = route;
     L.polyline(directRoute, { color: "#858981", weight: 4, opacity: 0.38, dashArray: "6 8" }).addTo(map);
     L.polyline(route, { color: "#b64d32", weight: 6, opacity: 0.96, lineCap: "round" }).addTo(map);
     L.marker(points.hub, { icon: marker("Dhunche hub", "#1d1e1a", "○") }).addTo(map);
@@ -60,8 +62,19 @@ function initMap(id, route = null, interactive = false) {
 
 function showScreen(id) {
   document.querySelectorAll(".app-screen").forEach((screen) => screen.classList.toggle("is-active", screen.id === id));
-  const map = maps[id.replace("-screen", "-map")];
-  if (map) setTimeout(() => map.invalidateSize(), 60);
+  const mapId = id.replace("-screen", "-map");
+  const map = maps[mapId];
+  if (map) setTimeout(() => {
+    map.invalidateSize();
+    if (mapRoutes[mapId]) {
+      const bottomPadding = mapId === "route-map" ? 125 : mapId === "active-map" ? 265 : 80;
+      map.fitBounds(L.latLngBounds(mapRoutes[mapId]), {
+        animate: false,
+        paddingTopLeft: [35, 55],
+        paddingBottomRight: [35, bottomPadding],
+      });
+    }
+  }, 100);
 }
 
 function showToast(message) {
@@ -74,6 +87,7 @@ function showToast(message) {
 
 function replaceActiveRoute(route) {
   const map = maps["active-map"];
+  mapRoutes["active-map"] = route;
   map.eachLayer((layer) => {
     if (layer instanceof L.Polyline) map.removeLayer(layer);
   });
